@@ -51,6 +51,16 @@ if(is_post_request() && request_is_same_domain()) {
     Email:<br />
     <input type="text" name="email" value="<?php echo h($user['email']); ?>" /><br />
     <br />
+    <h3>
+      Passwords should be at least 12 characters and include at least one uppercase
+      letter, lowercase letter, number, and symbol.
+    </h3>
+    Password:
+    <input type="password" name="password" value="" /><br />
+    <br />
+    Confirm Password:
+    <input type="password" name="confirm_password" value="" /><br />
+    <br />
     <input type="submit" name="submit" value="Update"  />
   </form>
 
