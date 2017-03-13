@@ -624,5 +624,80 @@
     }
   }
 
+  function find_failed_login($username) {
+    global $db;
+
+    $sql = "SELECT * FROM failed_logins ";
+    $sql .= "WHERE username='" . db_escape($db, $username) . "' ";
+    $sql .= "LIMIT 1;";
+
+    $fl_result = db_query($db, $sql);
+    return $fl_result;
+  }
+
+  function insert_failed_login($failed_login) {
+    global $db;
+
+    $sql = "INSERT INTO failed_logins";
+    $sql .= "(username, count, last_attempt)";
+    $sql .= "VALUES (";
+    $sql .= "'" . db_escape($db, $failed_login['username']) . "', ";
+    $sql .= "'" . db_escape($db, $failed_login['count']) . "',";
+    $sql .= "'" . $failed_login['last_attempt'] . "'";
+    $sql .= ");";
+
+    $result = db_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+      // The SQL DELETE statement failed.
+      // Just show the error, not the form
+      echo db_error($db);
+      db_close($db);
+      exit;
+    }
+  }
+
+  function update_failed_login($failed_login) {
+    global $db;
+
+    $sql = "UPDATE failed_logins SET ";
+    $sql .= "username='" . db_escape($db, $failed_login['username']) . "', ";
+    $sql .= "count='" . db_escape($db, $failed_login['count']) . "', ";
+    $sql .= "last_attempt='" . $failed_login['last_attempt'] . "'";
+    $sql .= "WHERE username='" . db_escape($db, $failed_login['username']) . "' ";
+    $sql .= "LIMIT 1;";
+
+    $result = db_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+      // The SQL DELETE statement failed.
+      // Just show the error, not the form
+      echo db_error($db);
+      db_close($db);
+      exit;
+    }
+  }
+
+  function reset_failed_login($username) {
+    global $db;
+
+    $sql = "UPDATE failed_logins SET ";
+    $sql .= "count='0'";
+    $sql .= "WHERE username='" . db_escape($db, $username) . "' ";
+    $sql .= "LIMIT 1;";
+
+    $result = db_query($db, $sql);
+    if($result) {
+      return true;
+    } else {
+      // The SQL DELETE statement failed.
+      // Just show the error, not the form
+      echo db_error($db);
+      db_close($db);
+      exit;
+    }
+  }
 
 ?>

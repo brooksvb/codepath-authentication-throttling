@@ -28,23 +28,34 @@ if(is_post_request() && request_is_same_domain()) {
 
   // If there were no errors, submit data to database
   if (empty($errors)) {
-
-    $users_result = find_users_by_username($username);
-    // No loop, only one result
-    $user = db_fetch_assoc($users_result);
-    if($user) {
-      if(password_verify($password, $user['hashed_password'])) {
-        // Username found, password matches
-        log_in_user($user);
-        // Redirect to the staff menu after login
-        redirect_to('index.php');
-      } else {
-        // Username found, but password does not match.
-        $errors[] = "Log in was unsuccessful.";
-      }
+    $throttle_time = throttle_time($username);
+    if ($throttle_time != 0) {
+      $throttle_time = ceil($throttle_time / 60); // Calculate minutes, round up
+      $errors[] = "Too many failed logins for this username. You will need to wait "
+        .$throttle_time." minutes before attempting another login.";
     } else {
-      // No username found
-      $errors[] ="Log in was unsuccessful.";
+
+      $users_result = find_users_by_username($username);
+      // No loop, only one result
+      $user = db_fetch_assoc($users_result);
+      if($user) {
+        if(password_verify($password, $user['hashed_password'])) {
+          // Username found, password matches
+          log_in_user($user);
+          // Redirect to the staff menu after login
+          redirect_to('index.php');
+        } else {
+          // Username found, but password does not match.
+          $errors[] = "Log in was unsuccessful.";
+          record_failed_login($username);
+
+        }
+      } else {
+        // No username found
+        $errors[] ="Log in was unsuccessful.";
+        record_failed_login($username);
+
+      }
     }
   }
 }
