@@ -59,7 +59,6 @@
 
     $fl_result = find_failed_login($username);
     $failed_login = db_fetch_assoc($fl_result);
-    var_dump($failed_login);
 
     if(!$failed_login) {
       echo 'new entry';
@@ -82,7 +81,6 @@
     $lockout = 60 * 5; // in seconds
     $fl_result = find_failed_login($username);
     $failed_login = db_fetch_assoc($fl_result);
-    var_dump($failed_login);
 
     if(!isset($failed_login)) { return 0; }
 
