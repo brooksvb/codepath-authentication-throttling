@@ -36,6 +36,14 @@
     return preg_match('/\A[0-9\-\(\)]+\Z/', $value);
   }
 
+  function has_valid_pass_format($value) {
+    return preg_match('/\A[A-Za-z0-9\~\!\@\#\$\%\^\&\*\+\=]+\Z/', $value) // Only these chars
+      && preg_match('/[\~\!\@\#\$\%\^\&\*\+\=]/', $value) // At least one symbol
+      && preg_match('/[A-Z]/', $value) // At least one UPPER
+      && preg_match('/[a-z]/', $value) // At least one lower
+      && preg_match('/[0-9]/', $value); // At least one number
+  }
+
   // Works for both new records and existing records, just
   // add the current ID of an existing record as the second
   // argument.
