@@ -34,6 +34,7 @@ $user = db_fetch_assoc($users_result);
     echo "<td>" . h($user['email']) . "</td>";
     echo "</tr>";
     echo "</table>";
+    echo h($user['hashed_password']);
 
     db_free_result($users_result);
   ?>
