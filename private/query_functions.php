@@ -542,14 +542,17 @@
       return $errors;
     }
 
+    $user['hashed_password'] = password_hash($user['password']);
+
     $created_at = date("Y-m-d H:i:s");
     $sql = "INSERT INTO users ";
-    $sql .= "(first_name, last_name, email, username, created_at) ";
+    $sql .= "(first_name, last_name, email, username, hashed_password, created_at) ";
     $sql .= "VALUES (";
     $sql .= "'" . db_escape($db, $user['first_name']) . "',";
     $sql .= "'" . db_escape($db, $user['last_name']) . "',";
     $sql .= "'" . db_escape($db, $user['email']) . "',";
     $sql .= "'" . db_escape($db, $user['username']) . "',";
+    $sql .= "'" . db_escape($db, $user['hashed_password']) . "',";    // Is db escape necessary when relying on php hash?
     $sql .= "'" . $created_at . "'";
     $sql .= ");";
     // For INSERT statements, $result is just true/false
@@ -575,11 +578,14 @@
       return $errors;
     }
 
+    $user['hashed_password'] = password_hash($user['password']);
+
     $sql = "UPDATE users SET ";
     $sql .= "first_name='" . db_escape($db, $user['first_name']) . "', ";
     $sql .= "last_name='" . db_escape($db, $user['last_name']) . "', ";
     $sql .= "email='" . db_escape($db, $user['email']) . "', ";
-    $sql .= "username='" . db_escape($db, $user['username']) . "' ";
+    $sql .= "username='" . db_escape($db, $user['username']) . "', ";
+    $sql .= "hashed_password='" . db_escape($db, $user['hashed_password']) . "'";
     $sql .= "WHERE id='" . db_escape($db, $user['id']) . "' ";
     $sql .= "LIMIT 1;";
     // For update_user statements, $result is just true/false
