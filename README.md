@@ -76,8 +76,9 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 ## Notes
 
 Describe any challenges encountered while building the app.
-- I was failing the csrf token checks at first because it was comparing localhost
-  to localhost:8080. I changed the function to parse the host from
+- I was failing the same_domain checks at first because it was comparing localhost
+  to localhost:8080. I changed the function to parse the host from HTTP_HOST so that
+  the port number was not considered.
 
 ## License
 
